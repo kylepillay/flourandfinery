@@ -1,5 +1,4 @@
 import {
-  defer,
   type LinksFunction,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
@@ -98,42 +97,35 @@ export async function loader({request, context}: LoaderFunctionArgs) {
   //
 
   const seo = seoPayload.root({shop: layout.shop, url: request.url});
-  return defer(
-    {
-      layout: layout || {},
-      headerPromise,
-      footerPromise,
-      shop: getShopAnalytics({
-        storefront: context.storefront,
-        publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-      }),
-      consent: {
-        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
-        storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      },
-      isLoggedIn: isLoggedInPromise,
-      isLoggedInPromise,
-      selectedLocale: storefront.i18n,
-      cart: cart.get(),
-      okendoProviderData,
-      seo,
+  return {
+    layout: layout || {},
+    headerPromise,
+    footerPromise,
+    shop: getShopAnalytics({
+      storefront: context.storefront,
+      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+    }),
+    consent: {
+      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+      storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+    },
+    isLoggedIn: isLoggedInPromise,
+    isLoggedInPromise,
+    selectedLocale: storefront.i18n,
+    cart: cart.get(),
+    okendoProviderData,
+    seo,
 
-      /**********  EXAMPLE UPDATE STARTS  ************/
-      env,
-      publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
-      publicStoreSubdomain: env.PUBLIC_SHOPIFY_STORE_DOMAIN,
-      publicStoreCdnStaticUrl: env.PUBLIC_STORE_CDN_STATIC_URL,
-      publicImageFormatForProductOption:
-        env.PUBLIC_IMAGE_FORMAT_FOR_PRODUCT_OPTION,
-      publicOkendoSubcriberId: env.PUBLIC_OKENDO_SUBSCRIBER_ID,
-      /**********   EXAMPLE UPDATE END   ************/
-    },
-    {
-      headers: {
-        'Set-Cookie': await context.session.commit(),
-      },
-    },
-  );
+    /**********  EXAMPLE UPDATE STARTS  ************/
+    env,
+    publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
+    publicStoreSubdomain: env.PUBLIC_SHOPIFY_STORE_DOMAIN,
+    publicStoreCdnStaticUrl: env.PUBLIC_STORE_CDN_STATIC_URL,
+    publicImageFormatForProductOption:
+      env.PUBLIC_IMAGE_FORMAT_FOR_PRODUCT_OPTION,
+    publicOkendoSubcriberId: env.PUBLIC_OKENDO_SUBSCRIBER_ID,
+    /**********   EXAMPLE UPDATE END   ************/
+  };
 }
 
 export const meta: MetaFunction<typeof loader> = ({data, matches}) => {

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {data, redirect, type LoaderFunctionArgs, type HeadersFunction} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from '@remix-run/react';
 import {Money, Image, flattenConnection} from '@shopify/hydrogen';
 import type {FulfillmentStatus} from '@shopify/hydrogen/customer-account-api-types';
@@ -12,6 +12,8 @@ import {PageAccoutLayout} from '~/components/PageAccountLayout';
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Order ${data?.order?.name}`}];
 };
+
+export const headers: HeadersFunction = ({loaderHeaders}) => loaderHeaders;
 
 export async function loader({request, context, params}: LoaderFunctionArgs) {
   if (!params.id) {
@@ -57,7 +59,7 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
         ? fulfillments[0].status
         : ('OPEN' as FulfillmentStatus);
 
-    return json(
+    return data(
       {
         order,
         lineItems,

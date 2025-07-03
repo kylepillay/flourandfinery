@@ -1,6 +1,5 @@
 import {
   type ActionFunctionArgs,
-  json,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
 import {useFetcher, useLoaderData} from '@remix-run/react';
@@ -2814,15 +2813,15 @@ export async function action({request, context}: ActionFunctionArgs) {
         }),
       },
     ).then((res) => res.json());
-    return json({
+    return {
       ...result,
       general_check_up,
-    });
+    };
   }
 
   // Create metaobject/metafield definitions
   if (_action === 'create_metaobject_metafield_definitions') {
-    return json({
+    return {
       ...result,
       fetch1_create_metafield_definitions:
         await mutationMetaObjectDefinitionsFetchs({
@@ -2836,24 +2835,24 @@ export async function action({request, context}: ActionFunctionArgs) {
           storeDomain: context.env.PUBLIC_STORE_DOMAIN,
           otherFields,
         }),
-    });
+    };
   }
 
   // import_demo_metaobjects_entries
   if (_action === 'import_demo_metaobjects_entries') {
-    return json({
+    return {
       ...result,
       import_entries: await fetchImportMetaobjectEntries({
         shopify_Access_Token: shopify_Access_Token.toString(),
         storeDomain: context.env.PUBLIC_STORE_DOMAIN,
         otherFields,
       }),
-    });
+    };
   }
 
-  return json({
+  return {
     ...result,
-  });
+  };
 }
 
 const __ACCESS_TOKEN = '';

@@ -1,4 +1,4 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {flattenConnection} from '@shopify/hydrogen';
 import {BLOGS_QUERY} from './($locale).news._index';
 
@@ -25,7 +25,7 @@ export const loader = async ({
   });
 
   if (!blog?.articles) {
-    return json({articles: []});
+    return {articles: []};
   }
 
   const articles = flattenConnection(blog.articles).map((article) => {
@@ -40,7 +40,7 @@ export const loader = async ({
     };
   });
 
-  return json({articles});
+  return {articles};
 };
 
 // no-op

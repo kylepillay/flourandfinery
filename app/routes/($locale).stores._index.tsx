@@ -1,5 +1,4 @@
 import {
-  json,
   type MetaArgs,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
@@ -22,7 +21,7 @@ export async function loader({context, params, request}: LoaderFunctionArgs) {
 
   const seo = seoPayload.stores();
 
-  return json({route, seo});
+  return {route, seo};
 }
 
 export const meta = ({matches}: MetaArgs<typeof loader>) => {

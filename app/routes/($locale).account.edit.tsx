@@ -1,4 +1,4 @@
-import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
+import {data, redirect, type ActionFunction, type HeadersFunction} from '@shopify/remix-oxygen';
 import {
   useActionData,
   Form,
@@ -45,6 +45,8 @@ export const handle = {
   renderInModal: true,
 };
 
+export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
+
 export const action: ActionFunction = async ({request, context, params}) => {
   const formData = await request.formData();
 
@@ -84,7 +86,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
       },
     });
   } catch (error: any) {
-    return json(
+    return data(
       {formError: error?.message},
       {
         status: 400,

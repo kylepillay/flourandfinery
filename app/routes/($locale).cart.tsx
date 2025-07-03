@@ -3,7 +3,8 @@ import invariant from 'tiny-invariant';
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  json,
+  data,
+  type HeadersFunction,
 } from '@shopify/remix-oxygen';
 import {
   CartForm,
@@ -39,6 +40,8 @@ import {
 import ButtonPrimary from '~/components/Button/ButtonPrimary';
 import clsx from 'clsx';
 import PageHeader from '~/components/PageHeader';
+
+export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
 
 export async function action({request, context}: ActionFunctionArgs) {
   const {cart} = context;
@@ -103,7 +106,7 @@ export async function action({request, context}: ActionFunctionArgs) {
 
   headers.append('Set-Cookie', await context.session.commit());
 
-  return json(
+  return data(
     {
       cart: cartResult,
       userErrors,
@@ -115,7 +118,7 @@ export async function action({request, context}: ActionFunctionArgs) {
 
 export async function loader({context}: LoaderFunctionArgs) {
   const {cart} = context;
-  return json(await cart.get());
+  return await cart.get();
 }
 
 export default function CartRoute() {
