@@ -1059,7 +1059,7 @@ const mutaionMetafieldDefinitionsFetchs = async ({
                   id
                   name
                   namespace
-                  key 
+                  key
                 }
                 userErrors {
                   field
@@ -2396,6 +2396,22 @@ const fetchImportMetaobjectEntries = async ({
     'ciseco--section_steps',
     'section-steps-home-2',
   );
+  // Try to get HIW image IDs, but proceed without them if not found
+  const hiw1_img_id = getImageIDByFilename('ciseco_HIW1img');
+  const hiw2_img_id = getImageIDByFilename('ciseco_HIW2img');
+  const hiw3_img_id = getImageIDByFilename('ciseco_HIW3img');
+  const hiw4_img_id = getImageIDByFilename('ciseco_HIW4img');
+  
+  console.log('HIW image IDs:', {
+    hiw1_img_id,
+    hiw2_img_id,
+    hiw3_img_id,
+    hiw4_img_id,
+  });
+  
+  // Create Section Steps without icons if HIW images are missing
+  // The icons field will be omitted if images are not available
+
   const import_SectionSteps = await Promise.all([
     !SectionSteps_home_1_ID
       ? fetchImportMetaobjectEntriesItem({
@@ -2418,10 +2434,11 @@ const fetchImportMetaobjectEntries = async ({
                 key: 'contents',
                 value: `["Smart filtering and suggestions make it easy to find.","Easily select the correct items and add them to the cart.","The carrier will confirm and ship quickly to you.","Have fun and enjoy your 5-star quality products."]`,
               },
-              {
+              // Only include icons if all HIW images are available
+              ...(hiw1_img_id && hiw2_img_id && hiw3_img_id && hiw4_img_id ? [{
                 key: 'icons',
-                value: `["${getImageIDByFilename('ciseco_HIW1img')}","${getImageIDByFilename('ciseco_HIW2img')}","${getImageIDByFilename('ciseco_HIW3img')}","${getImageIDByFilename('ciseco_HIW4img')}"]`,
-              },
+                value: `["${hiw1_img_id}","${hiw2_img_id}","${hiw3_img_id}","${hiw4_img_id}"]`,
+              }] : []),
             ],
           },
         })
@@ -2448,10 +2465,11 @@ const fetchImportMetaobjectEntries = async ({
                 key: 'contents',
                 value: `["Smart filtering and suggestions make it easy to find.","Easily select the correct items and add them to the cart.","The carrier will confirm and ship quickly to you.","Have fun and enjoy your 5-star quality products."]`,
               },
-              {
+              // Only include icons if all HIW images are available
+              ...(hiw1_img_id && hiw2_img_id && hiw3_img_id && hiw4_img_id ? [{
                 key: 'icons',
-                value: `["${getImageIDByFilename('ciseco_HIW1img')}","${getImageIDByFilename('ciseco_HIW2img')}","${getImageIDByFilename('ciseco_HIW3img')}","${getImageIDByFilename('ciseco_HIW4img')}"]`,
-              },
+                value: `["${hiw1_img_id}","${hiw2_img_id}","${hiw3_img_id}","${hiw4_img_id}"]`,
+              }] : []),
             ],
           },
         })
@@ -2467,9 +2485,18 @@ const fetchImportMetaobjectEntries = async ({
     SectionSteps_home_2_ID;
 
   if (!SectionSteps_home_1_ID || !SectionSteps_home_2_ID) {
+    console.error('Section Steps creation failed:', {
+      SectionSteps_home_1_ID,
+      SectionSteps_home_2_ID,
+      import_SectionSteps_results: import_SectionSteps,
+    });
     return [
       ...RESULT,
-      {errors: 'Error when create Section Steps metaobject entries.'},
+      {errors: 'Error when create Section Steps metaobject entries.', debug: {
+        SectionSteps_home_1_ID,
+        SectionSteps_home_2_ID,
+        import_SectionSteps_results: import_SectionSteps,
+      }},
     ];
   }
 
@@ -2744,7 +2771,7 @@ export async function action({request, context}: ActionFunctionArgs) {
   const formData = await request.formData();
   const {_action, shopify_Access_Token, ...otherFields} =
     Object.fromEntries(formData);
-  let result = {
+  const result = {
     message: 'Hello, World!',
     general_check_up: null,
     fetch1_create_metafield_definitions: null,
