@@ -1,10 +1,9 @@
 import {avatarColors} from '@/contains/contants';
-import React, {type FC} from 'react';
+import {type FC, type ComponentProps} from 'react';
 import {avatarImgs} from '@/contains/fakeData';
 import {Image} from '@shopify/hydrogen';
-import {type HydrogenImageProps} from '@shopify/hydrogen-react/Image';
 
-export interface AvatarProps extends HydrogenImageProps {
+export interface AvatarProps extends ComponentProps<typeof Image> {
   containerClassName?: string;
   sizeClass?: string;
   radius?: string;

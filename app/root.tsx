@@ -18,7 +18,7 @@ import {
 import {
   useNonce,
   getSeoMeta,
-  UNSTABLE_Analytics as Analytics,
+  Analytics,
   getShopAnalytics,
 } from '@shopify/hydrogen';
 import {Layout} from '~/components/Layout';

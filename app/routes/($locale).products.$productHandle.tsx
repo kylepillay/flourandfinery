@@ -11,7 +11,7 @@ import {
   Image,
   VariantSelector,
   getSelectedProductOptions,
-  UNSTABLE_Analytics as Analytics,
+  Analytics,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
